@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>致陈晓婷 · 来自范梓峰</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;}
+body{background:linear-gradient(to bottom,#0c0e2a 0%,#000 100%);}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;}
+.heart-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;}
+.text-box{position:absolute;z-index:10;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#fff;padding:20px;width:90%;max-width:500px;}
+h1{font-size:clamp(1.8rem,6vw,3rem);margin-bottom:20px;text-shadow:0 0 20px rgba(255,100,150,0.8);animation:glow 2s infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 15px rgba(255,100,150,0.8),0 0 30px rgba(255,100,150,0.4);}to{text-shadow:0 0 25px rgba(255,100,150,1),0 0 50px rgba(255,100,150,0.6);}}
+.letter{font-size:clamp(1rem,3vw,1.2rem);line-height:2;color:rgba(255,255,255,0.9);margin-bottom:25px;opacity:0;animation:fadeIn 2s forwards;animation-delay:1s;}
+@keyframes fadeIn{to{opacity:1;}}
+.sign{font-size:clamp(1rem,3vw,1.3rem);color:#ff9eca;opacity:0;animation:fadeIn 2s forwards;animation-delay:3.5s;}
+.btn{margin-top:35px;padding:12px 35px;font-size:1.1rem;background:linear-gradient(135deg,#ff6b9d,#c44569);border:none;border-radius:50px;color:#fff;cursor:pointer;opacity:0;animation:fadeIn 2s forwards;animation-delay:4.5s;transition:transform 0.3s,box-shadow 0.3s;}
+.btn:hover{transform:scale(1.08);box-shadow:0 0 30px rgba(255,100,150,0.6);}
+</style>
+</head>
+<body>
+<canvas id="starSky"></canvas>
+<canvas id="heartCanvas" class="heart-canvas"></canvas>
+<div class="text-box">
+  <h1>致 陈晓婷 💌</h1>
+  <div class="letter">
+    晓婷：<br><br>
+    不知道从什么时候开始，我的目光总会不自觉地追着你。<br>
+    和你在一起的每一刻，都像星星落入眼里，温柔又闪亮。<br>
+    我想把这份藏了很久的心意，认真地告诉你——<br>
+    喜欢你，不是一时兴起，是深思熟虑后的坚定。<br>
+    往后的路，能不能让我牵着你的手，一起走下去？<br>
+  </div>
+  <div class="sign">—— 喜欢你的 范梓峰 ❤</div>
+  <button class="btn" onclick="this.style.transform='scale(1.2)';this.innerText='我等你答复 💓'">告诉我你的答案</button>
+</div>
+
+<script>
+// 星空背景
+const star=document.getElementById('starSky'),s=star.getContext('2d');
+star.width=innerWidth;star.height=innerHeight;
+window.onresize=()=>{star.width=innerWidth;star.height=innerHeight;};
+let stars=[],num=Math.floor((innerWidth*innerHeight)/4000);
+for(let i=0;i<num;i++)stars.push({x:Math.random()*star.width,y:Math.random()*star.height,r:Math.random()*1.5+0.3,a:Math.random(),da:Math.random()*0.01+0.005});
+function drawStar(){s.clearRect(0,0,star.width,star.height);stars.forEach(p=>{p.a+=p.da;if(p.a>1)p.a=0;s.beginPath();s.arc(p.x,p.y,p.r,0,Math.PI*2);s.fillStyle=`rgba(255,255,255,${0.4+Math.sin(p.a*Math.PI*2)*0.6})`;s.fill();});requestAnimationFrame(drawStar);}
+drawStar();
+
+// 飘动爱心
+const hc=document.getElementById('heartCanvas'),hctx=hc.getContext('2d');
+hc.width=innerWidth;hc.height=innerHeight;
+window.onresize=()=>{hc.width=innerWidth;hc.height=innerHeight;};
+let hearts=[];
+function createHeart(){return{x:Math.random()*hc.width,y:hc.height+50,size:Math.random()*15+8,speed:Math.random()*0.8+0.5,swing:Math.random()*Math.PI*2,swingSpeed:Math.random()*0.02+0.01,alpha:Math.random()*0.4+0.3,color:['#ff6b9d','#ff4757','#ff9eca','#ff7faa'][Math.floor(Math.random()*4)]};}
+setInterval(()=>{if(Math.random()>0.4)hearts.push(createHeart());},400);
+function drawHeartShape(x,y,size,color,alpha){hctx.save();hctx.globalAlpha=alpha;hctx.fillStyle=color;hctx.beginPath();for(let i=0;i<Math.PI*2;i++){let hx=size*16*Math.pow(Math.sin(i),3),hy=-size*(13*Math.cos(i)-5*Math.cos(2*i)-2*Math.cos(3*i)-Math.cos(4*i));hctx.lineTo(x+hx,y+hy);}hctx.closePath();hctx.fill();hctx.restore();}
+function animateHearts(){hctx.clearRect(0,0,hc.width,hc.height);hearts=hearts.filter(h=>{h.y-=h.speed;h.swing+=h.swingSpeed;h.x+=Math.sin(h.swing)*0.5;if(h.y<-50)return false;drawHeartShape(h.x,h.y,h.size/18,h.color,h.alpha);return true;});requestAnimationFrame(animateHearts);}
+animateHearts();
+</script>
+</body>
+</html>
